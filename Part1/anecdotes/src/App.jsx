@@ -14,39 +14,64 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
   var [votes,setVotes] = useState(new Uint8Array(8))
-  console.log(votes)
+  const [winner,setWinner] = useState(0)
 
   const generateRandom = () => {
-    return Math.floor(Math.random() * 8);
+    return Math.floor(Math.random() * anecdotes.length);
   }
 
   const handleClick = () => {
     setSelected(generateRandom())
   } 
-  
+
   const handleVote = () => {
-    console.log(selected)
-    //setVotes(votes[selected]+=1) - Not allowed because it's a direct mutation of the useState value
-    setVotes({...votes,[selected]: votes[selected]+1})
-  }
+    //setVotes(votes[selected]+=1) - Reminder to me: not allowed because it's a direct mutation of the useState value
+    setVotes(votes => {
+        const updatedVotes = [...votes];
+        updatedVotes[selected] += 1;
+
+        let maxIndex = 0;
+        for (let i = 1; i < updatedVotes.length; i++) {
+            if (updatedVotes[i] > updatedVotes[maxIndex]) {
+                maxIndex = i;
+            }
+        }
+        setWinner(maxIndex);
+        return updatedVotes;
+    });
+}
 
   return (
     <div>
+
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
       <p>has {votes[selected]} votes</p>
-      <Button text={'vote'} onClick={handleVote}/>
-      <Button text={'next anecdote'} onClick={handleClick}/>
+
+      <table>
+        <tbody>
+          <tr>
+            <Button text={'vote'} onClick={handleVote}/>
+            <Button text={'next anecdote'} onClick={handleClick}/>
+      </tr>
+      </tbody>
+      </table>
+
+      <h1>Anecdote with most votes</h1>
+      {anecdotes[winner]}
+      <p>has {votes[winner]} votes</p>
+
     </div>
   )
 }
 
 const Button = ({onClick,text}) => {
   return(
-  <div>
+  <td>
   <button onClick={onClick}>
     {text}
   </button>
-  </div>
+  </td>
   )
 }
 
