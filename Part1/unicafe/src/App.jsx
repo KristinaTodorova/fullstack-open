@@ -20,14 +20,14 @@ const App = () => {
       <Button handleClick={handleNeutralClick} text={'neutral'}/>
       <Button handleClick={handleBadClick} text={'bad'}/>
 
-      <h1>statistics</h1>
-
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {good+neutral+bad}</p>
-      <p>average {average()}</p>
-      <p>positive {positive()}%</p>
+      <Statistics 
+      good={good}
+      neutral={neutral}
+      bad={bad}
+      all={good+bad+neutral}
+      average={average()}
+      positive={positive()}
+      />
     </div>
   )
 }
@@ -37,5 +37,20 @@ const Button = ({ handleClick, text }) => (
     {text}
   </button>
 )
+
+const Statistics = (props) => {
+  return (
+    <div>
+       <h1>statistics</h1>
+
+      <p>good {props.good}</p>
+      <p>neutral {props.neutral}</p>
+      <p>bad {props.bad}</p>
+      <p>all {props.good+props.neutral+props.bad}</p>
+      <p>average {props.average}</p>
+      <p>positive {props.positive}%</p>
+    </div>
+  )
+}
 
 export default App
