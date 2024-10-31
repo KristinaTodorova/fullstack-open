@@ -39,6 +39,16 @@ const Button = ({ handleClick, text }) => (
 )
 
 const Statistics = (props) => {
+
+  if (props.good === 0 && props.neutral === 0 && props.bad === 0) {
+    return(
+      <div>
+        <h1>statistics</h1>
+        <p>no feedback given</p>
+      </div>
+    );
+  }
+
   return (
     <div>
        <h1>statistics</h1>
