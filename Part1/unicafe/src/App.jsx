@@ -9,6 +9,7 @@ const App = () => {
   const handleGoodClick = () => {setGood(good+1)}
   const handleNeutralClick = () => {setNeutral(neutral+1)}
   const handleBadClick = () => {setBad(bad+1)}
+  const total = (good+neutral+bad)
   const average = () => (good-bad)/(good+neutral+bad) || 0;
   const positive = () => (good/(good+neutral+bad)*100) || 0;
 
@@ -24,7 +25,7 @@ const App = () => {
       good={good}
       neutral={neutral}
       bad={bad}
-      all={good+bad+neutral}
+      all={total}
       average={average()}
       positive={positive()}
       />
@@ -53,13 +54,21 @@ const Statistics = (props) => {
     <div>
        <h1>statistics</h1>
 
-      <p>good {props.good}</p>
-      <p>neutral {props.neutral}</p>
-      <p>bad {props.bad}</p>
-      <p>all {props.good+props.neutral+props.bad}</p>
-      <p>average {props.average}</p>
-      <p>positive {props.positive}%</p>
+       <StatisticLine text={'good'} value={props.good}/>
+       <StatisticLine text={'neutral'} value={props.neutral}/>
+       <StatisticLine text={'bad'} value={props.bad}/>
+       <StatisticLine text={'all'} value={props.total}/>
+       <StatisticLine text={'average'} value={props.average}/>
+       <StatisticLine text={'positive'} value={props.positive+'%'}/>
+
     </div>
+  )
+}
+
+const StatisticLine = ({text, value}) => {
+
+  return(
+  <p>{text} {value}</p>
   )
 }
 
