@@ -2,7 +2,7 @@
 This repository will be used for submitting solutions to the tasks of Fullstack Open course by University of Helsinki.
 
 **Part 0:** Done ✅\
-**Part 1:** To-Do\
+**Part 1:** Done ✅\
 **Part 2:** To-Do\
 **Part 3:** To-Do\
 **Part 4:** To-Do\
