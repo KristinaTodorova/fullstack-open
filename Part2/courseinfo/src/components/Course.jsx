@@ -1,23 +1,23 @@
-const Course = ({course}) => {
-
-    const total = course.parts.reduce((sum, parts) => sum+parts.exercises,0)
-
-    
+const Course = ({courses}) => {
     return(
         <div>
-            <Header name={course.name}/>
-            <Content parts={course.parts}/>
-            <p>total of {total} exercises</p>
-
+            <h1>Web development curriculum</h1>
+            {courses.map((course) => (
+                        <div key={course.id}>
+                        <Header name={course.name}/>
+                        <Content parts={course.parts}/>
+                        <h4>total of {course.parts.reduce((sum, parts) => sum+parts.exercises,0)} exercises</h4>
+                        </div>
+            ))}
         </div>
-        )
-}
+    )
+    }
 
 const Header = (props) => {
     return(
-        <h1 key={props.id}>
+        <h3 key={props.id}>
             {props.name}
-        </h1>
+        </h3>
     )
 }
 
