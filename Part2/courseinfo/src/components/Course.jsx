@@ -1,3 +1,6 @@
+import Header from "./Header"
+import Content from "./Content"
+
 const Course = ({courses}) => {
     return(
         <div>
@@ -12,31 +15,5 @@ const Course = ({courses}) => {
         </div>
     )
     }
-
-const Header = (props) => {
-    return(
-        <h3 key={props.id}>
-            {props.name}
-        </h3>
-    )
-}
-
-const Content = (props) => {
-    return (
-    <div>
-            <Part parts={props.parts}/>
-        </div>
-    )
-}
-
-const Part = (props) => {
-    return (
-            props.parts.map( (part) => 
-                <div key={part.id}>
-                    {part.name} {part.exercises}
-                </div>
-            )
-    )
-}
 
 export default Course
