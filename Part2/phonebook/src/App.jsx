@@ -37,10 +37,31 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    if (persons.some(person => person.name === newName)) {
+    if (persons.some(person => person.name === newName && person.number === newNumber)) {
       alert(`${newName} is already added to phonebook`)
       return
     }
+
+    const existingPerson = persons.find(person => person.name === newName);
+
+    if (existingPerson) {
+      if (window.confirm(`Update ${newName} 's phone number?`)){
+        const updatedPerson = { ...existingPerson, number: newNumber };
+
+        personService
+        .update(existingPerson.id,updatedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => 
+            person.id === existingPerson.id ? returnedPerson : person
+          ));
+          setNewName('');
+          setNewNumber('');
+        })
+      }
+
+    }
+
+    else {
 
     const personObject = {
       name: newName,
@@ -59,6 +80,7 @@ const App = () => {
     setNewName('')
     setNewNumber('')
   }
+  }
 
   const filteredPersons = (persons || []).filter(person =>
     person.name.toLowerCase().includes(search.toLowerCase())
@@ -70,7 +92,7 @@ const App = () => {
       personService
       .remove(id)
       .then(() => {
-        setPersons(persons.filter(p => p.id !== id)); // Update the state
+        setPersons(persons.filter(p => p.id !== id));
       })
     }
   }
