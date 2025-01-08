@@ -3,6 +3,8 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import './index.css'
 
 const App = () => {
 
@@ -10,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setNewSearch] = useState('')
+  const [notification, setNewNotification] = useState('')
 
   useEffect(() => {
 
@@ -45,7 +48,7 @@ const App = () => {
     const existingPerson = persons.find(person => person.name === newName);
 
     if (existingPerson) {
-      if (window.confirm(`Update ${newName} 's phone number?`)){
+      if (window.confirm(`Update ${newName}'s phone number?`)){
         const updatedPerson = { ...existingPerson, number: newNumber };
 
         personService
@@ -54,6 +57,10 @@ const App = () => {
           setPersons(persons.map(person => 
             person.id === existingPerson.id ? returnedPerson : person
           ));
+          setNewNotification(`Changed ${newName}'s phone number in the list.`)
+          setTimeout(() => {
+              setNewNotification('')
+            }, 5000)
           setNewName('');
           setNewNumber('');
         })
@@ -77,6 +84,10 @@ const App = () => {
     })
 
     setPersons(persons.concat(personObject))
+    setNewNotification(`Added ${newName} to the list.`)
+    setTimeout(() => {
+      setNewNotification('')
+    }, 5000)
     setNewName('')
     setNewNumber('')
   }
@@ -111,6 +122,8 @@ const App = () => {
         handleNameChange={handleNameChange} 
         handleNumberChange={handleNumberChange} 
       />
+
+      { notification && <Notification message={notification} />}
 
       <h2>Numbers</h2>
       <Persons persons={filteredPersons} onDelete={remove} />
