@@ -49,8 +49,10 @@ const App = () => {
 
     personService
     .create(personObject)
-    .then(response => {
-      console.log(response)
+    .then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson));
+      setNewName('');
+      setNewNumber('');
     })
 
     setPersons(persons.concat(personObject))
@@ -61,6 +63,17 @@ const App = () => {
   const filteredPersons = (persons || []).filter(person =>
     person.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const remove = id => {
+    const person = persons.find (p => p.id === id);
+    if (window.confirm(`Delete ${person.name} ?`)){
+      personService
+      .remove(id)
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== id)); // Update the state
+      })
+    }
+  }
 
   return (
     <div>
@@ -78,7 +91,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} onDelete={remove} />
     </div>
   )
 }
