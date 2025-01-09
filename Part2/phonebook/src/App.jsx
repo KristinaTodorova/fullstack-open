@@ -5,6 +5,7 @@ import Persons from './components/Persons'
 import personService from './services/persons'
 import Notification from './components/Notification'
 import './index.css'
+import ErrorMessage from './components/ErrorMessage'
 
 const App = () => {
 
@@ -13,6 +14,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [search, setNewSearch] = useState('')
   const [notification, setNewNotification] = useState('')
+  const [error, setNewError] = useState('')
 
   useEffect(() => {
 
@@ -64,12 +66,20 @@ const App = () => {
           setNewName('');
           setNewNumber('');
         })
+        .catch(error => {
+          console.log('fail')
+          setNewError(`The information of ${newName} has been removed from the server.`)
+          setTimeout(() => {
+              setNewError('')
+            }, 5000)
+          setNewName('');
+          setNewNumber('');
+        })
       }
 
     }
 
     else {
-
     const personObject = {
       name: newName,
       number: newNumber
@@ -114,6 +124,8 @@ const App = () => {
       <Filter value={search} onChange={handleSearchChange} />
 
       <h2>Add entry</h2>
+
+      {error && <ErrorMessage message={error} />}
 
       <PersonForm 
         onSubmit={addName} 
