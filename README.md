@@ -3,7 +3,8 @@ This repository will be used for submitting solutions to the tasks of Fullstack 
 
 **Part 0:** Done ✅\
 **Part 1:** Done ✅\
-**Part 2:** To-Do\
+**Part 2:** Done ✅\
 **Part 3:** To-Do\
 **Part 4:** To-Do\
-**Part 5:** To-Do
+**Part 5:** To-Do\
+**Part 6:** To-Do
