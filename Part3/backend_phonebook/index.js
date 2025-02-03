@@ -1,7 +1,10 @@
 const express = require('express')
+const morgan = require('morgan')
+const bodyparser = require('body-parser');
 const app = express()
 
 app.use(express.json())
+app.use(bodyparser.json());
 
 let persons = [
     { 
@@ -25,6 +28,14 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
+
+app.use(morgan('tiny'))
+
+morgan.token('req-body', (req) => {
+    return req.method === 'POST' ? JSON.stringify(req.body) : '';
+});
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :req-body'));
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
@@ -63,6 +74,7 @@ const generateId = () => {
     return String(newId)
   }
   
+
 app.post('/api/persons', (request, response) => {
     const body = request.body
   
@@ -72,6 +84,7 @@ app.post('/api/persons', (request, response) => {
       })
     }
 
+    
     const nameExists = persons.map(person => person.name).some(name => name === body.name);
     if (nameExists) {
         return response.status(400).json({ 
@@ -95,6 +108,7 @@ app.post('/api/persons', (request, response) => {
   
     response.json(person)
   })
+
 
 const PORT = 3001
 app.listen(PORT, () => {
