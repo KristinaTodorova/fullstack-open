@@ -26,11 +26,14 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-app.get('/info', (request, response) => {
-    const personcount = persons.length
-    const addedDate = new Date();
-    const addedTime = addedDate.toString();
-    response.send(`<p>Phonebook has info for ${personcount} people.</p> <br/> ${addedTime}`)
+app.get('/info', (request, response, next) => {
+    Person.countDocuments({})
+    .then(personcount => {
+      const addedDate = new Date()
+      const addedTime = addedDate.toString()
+      response.send(`<p>Phonebook has info for ${personcount} people.</p> <br/> ${addedTime}`)
+    })
+    .catch(error => next(error))
   })
 
   app.get('/api/persons/:id', (request, response, next) => {
@@ -43,12 +46,6 @@ app.get('/info', (request, response) => {
         }
       })
       .catch(error => next(error))
-  })
-
-app.get('/api/notes/:id', (request, response) => {
-    Note.findById(request.params.id).then(note => {
-      response.json(note)
-    })
   })
 
 app.delete('/api/persons/:id', (request, response, next) => {
