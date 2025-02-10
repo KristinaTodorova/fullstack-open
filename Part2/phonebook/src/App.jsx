@@ -91,15 +91,22 @@ const App = () => {
       setPersons(persons.concat(returnedPerson));
       setNewName('');
       setNewNumber('');
-    })
-
-    setPersons(persons.concat(personObject))
+      setPersons(persons.concat(personObject))
     setNewNotification(`Added ${newName} to the list.`)
     setTimeout(() => {
       setNewNotification('')
     }, 5000)
     setNewName('')
     setNewNumber('')
+    })
+
+    .catch(error => {
+      console.log('fail')
+      setNewError(error.response.data.error);
+      setTimeout(() => {
+        setNewError('')
+      }, 5000)
+    })
   }
   }
 
