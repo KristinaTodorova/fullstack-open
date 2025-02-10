@@ -65,7 +65,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     name: body.name,
     number: body.number
   }
-  
+
   Person.findByIdAndUpdate(request.params.id, person, {new: true})
   .then (updatedNote => {
     response.json(updatedNote)
@@ -76,13 +76,6 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
-
-    /* const nameExists = persons.map(person => person.name).some(name => name === body.name);
-    if (nameExists) {
-        return response.status(400).json({ 
-            error: 'Name must be unique' 
-        });
-    } */
   
     if (body.name === undefined) {
       return response.status(400).json({ error: 'name missing' })
@@ -91,15 +84,30 @@ app.post('/api/persons', (request, response) => {
     if (body.number === undefined) {
       return response.status(400).json({ error: 'number missing' })
     }
-  
-    const person = new Person({
-      name: body.name,
-      number: body.number,
+
+    Person.findOne({name: body.name})
+    .then(existingPerson => {
+      if (existingPerson) {
+        Person.findByIdAndUpdate(
+          existingPerson._id,
+          {number: body.number },
+          {new: true}
+      )
+      .then(updatedPerson => response.json(updatedPerson))
+      .catch(error => next(error));
+      } 
+
+      else{
+        const person = new Person({
+          name: body.name,
+          number: body.number,
+        });
+        person.save().then(savedPerson => {
+          response.json(savedPerson)
+        })
+      }
     })
-  
-    person.save().then(savedPerson => {
-      response.json(savedPerson)
-    })
+    .catch(error => next(error));
   })
 
   const errorHandler = (error, request, response, next) => {
