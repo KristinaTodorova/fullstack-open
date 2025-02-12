@@ -83,7 +83,7 @@ app.post('/api/persons', (request, response, next) => {
 
     Person.findOne({name: body.name})
     .then(existingPerson => {
-      if (existingPerson) {
+      if (existingPerson && existingPerson._id) {
         Person.findByIdAndUpdate(
           existingPerson._id,
           {number: body.number },
