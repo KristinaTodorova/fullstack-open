@@ -116,6 +116,9 @@ app.post('/api/persons', (request, response, next) => {
     } else if (error.name === 'ValidationError') {
       return response.status(400).json({ error: error.message })
     }
+    else if (error.number === 'ValidationError') {
+      return response.status(400).json({ error: error.message })
+    }
     next(error)
   }
   
