@@ -18,6 +18,11 @@ mongoose.connect(url)
       type: String,
       minLength: 3,
       required: true
+    },
+
+    number: {
+      type: Number,
+      required: true
     }
   })
   
