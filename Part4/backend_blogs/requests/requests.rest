@@ -1,0 +1,34 @@
+GET http://localhost:3001/api/blogs/
+
+###
+POST http://localhost:3001/api/blogs/ HTTP/1.1
+content-type: application/json
+
+{
+    "title": "How to be a fullstack rockstar",
+    "author": "Kristina Todorova",
+    "url": "google.com",
+    "likes": "10"
+}
+
+###
+POST http://localhost:3001/api/blogs HTTP/1.1
+content-type: application/json
+
+{
+    "title": "How to be a marketing rockstar",
+    "author": "Koko",
+    "url": "google.com",
+    "likes": "10000"
+}
+
+###
+POST http://localhost:3001/api/blogs HTTP/1.1
+content-type: application/json
+
+{
+    "title": "How to refactor an app and not f- it up",
+    "author": "Kristina Todorova",
+    "url": "google.com",
+    "likes": "1"
+}
