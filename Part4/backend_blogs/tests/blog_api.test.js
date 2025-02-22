@@ -126,6 +126,40 @@ test.only('post without url returns 400 and nothing is created', async () => {
     assert.strictEqual(updatedLength, initialLength)
 })
 
+test.only('count decreases when blog is deleted', async () => {
+    const initialResponse = await api.get('/api/blogs')
+    const initialLength = initialResponse.body.length
+
+      await api.delete(`/api/blogs/${initialResponse.body[5].id}`)
+      .expect(204)
+
+      const response = await api.get('/api/blogs')
+      const updatedLength = response.body.length
+
+    assert.strictEqual(updatedLength, initialLength - 1)
+})
+
+test.only('likes increase when blog is updated', async () => {
+    const initialResponse = await api.get('/api/blogs')
+    const blogId = initialResponse.body[5].id
+
+    const newBlog = {
+        title: 'How to be a marketing rockstar',
+        author: 'Koko',
+        url: 'amazingmarketing.com',
+        likes: 2828
+      }
+      await api.put(`/api/blogs/${blogId}`)
+      .send(newBlog)
+      .expect(200)
+
+      const response = await api.get('/api/blogs')
+      const updatedBlog = response.body.find(blog => blog.id === blogId);
+      const updatedLikes = updatedBlog.likes
+
+    assert.strictEqual(updatedLikes, 2828)
+})
+
 
 after(async () => {
   await mongoose.connection.close()
