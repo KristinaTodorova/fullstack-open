@@ -38,9 +38,9 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-test('there are nine blogs', async () => {
+test('there are 13 blogs', async () => {
     const response = await api.get('/api/blogs')
-    assert.strictEqual(response.body.length, 12)
+    assert.strictEqual(response.body.length, 13)
 })
 
 test('unique identifier is named id', async () => {
@@ -69,6 +69,23 @@ test('post request successful and count increases by one', async () => {
       const updatedLength = response.body.length
 
     assert.strictEqual(updatedLength, initialLength + 1)
+})
+
+test.only('if there are no likes, the default value is 0', async () => {
+    const newBlog = {
+        title: 'Exercise 4.11 will be successful',
+        author: 'Meee Obviously',
+        url: 'www.google.com'
+      }
+
+      await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+
+      const response = await api.get('/api/blogs')
+      savedBlog = response.body[response.body.length-1]
+      console.log('Blog:', savedBlog);
+      assert.strictEqual(savedBlog.likes, 0)
 })
 
 after(async () => {
