@@ -71,7 +71,7 @@ test('post request successful and count increases by one', async () => {
     assert.strictEqual(updatedLength, initialLength + 1)
 })
 
-test.only('if there are no likes, the default value is 0', async () => {
+test('if there are no likes, the default value is 0', async () => {
     const newBlog = {
         title: 'Exercise 4.11 will be successful',
         author: 'Meee Obviously',
@@ -87,6 +87,45 @@ test.only('if there are no likes, the default value is 0', async () => {
       console.log('Blog:', savedBlog);
       assert.strictEqual(savedBlog.likes, 0)
 })
+
+test.only('post without title returns 400 and nothing is created', async () => {
+    const initialResponse = await api.get('/api/blogs')
+    const initialLength = initialResponse.body.length
+
+    const newBlog = {
+        author: 'Kristina Obviously',
+        url: 'www.google.com',
+        likes: 10
+      }
+      await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+      const response = await api.get('/api/blogs')
+      const updatedLength = response.body.length
+
+    assert.strictEqual(updatedLength, initialLength)
+})
+
+test.only('post without url returns 400 and nothing is created', async () => {
+    const initialResponse = await api.get('/api/blogs')
+    const initialLength = initialResponse.body.length
+
+    const newBlog = {
+        title: 'Amazing blog post but without url',
+        author: 'Kristina Todorova',
+        likes: 10
+      }
+      await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+
+      const response = await api.get('/api/blogs')
+      const updatedLength = response.body.length
+
+    assert.strictEqual(updatedLength, initialLength)
+})
+
 
 after(async () => {
   await mongoose.connection.close()
