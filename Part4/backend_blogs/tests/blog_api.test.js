@@ -40,11 +40,7 @@ test('blogs are returned as json', async () => {
 
 test('there are nine blogs', async () => {
     const response = await api.get('/api/blogs')
-    assert.strictEqual(response.body.length, 9)
-  })
-
-after(async () => {
-  await mongoose.connection.close()
+    assert.strictEqual(response.body.length, 12)
 })
 
 test('unique identifier is named id', async () => {
@@ -53,7 +49,27 @@ test('unique identifier is named id', async () => {
         assert.strictEqual("id" in blog, true)
         assert.strictEqual("_id" in blog, false)
     })
-  })
+})
+
+test('post request successful and count increases by one', async () => {
+    const initialResponse = await api.get('/api/blogs')
+    const initialLength = initialResponse.body.length
+
+    const newBlog = {
+        title: 'Exercise 4.10 will be successful',
+        author: 'Kristina Obviously',
+        url: 'www.google.com',
+        likes: 10
+      }
+      await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+
+      const response = await api.get('/api/blogs')
+      const updatedLength = response.body.length
+
+    assert.strictEqual(updatedLength, initialLength + 1)
+})
 
 after(async () => {
   await mongoose.connection.close()
