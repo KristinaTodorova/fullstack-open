@@ -88,7 +88,7 @@ test('if there are no likes, the default value is 0', async () => {
       assert.strictEqual(savedBlog.likes, 0)
 })
 
-test.only('post without title returns 400 and nothing is created', async () => {
+test('post without title returns 400 and nothing is created', async () => {
     const initialResponse = await api.get('/api/blogs')
     const initialLength = initialResponse.body.length
 
@@ -107,7 +107,7 @@ test.only('post without title returns 400 and nothing is created', async () => {
     assert.strictEqual(updatedLength, initialLength)
 })
 
-test.only('post without url returns 400 and nothing is created', async () => {
+test('post without url returns 400 and nothing is created', async () => {
     const initialResponse = await api.get('/api/blogs')
     const initialLength = initialResponse.body.length
 
@@ -126,7 +126,7 @@ test.only('post without url returns 400 and nothing is created', async () => {
     assert.strictEqual(updatedLength, initialLength)
 })
 
-test.only('count decreases when blog is deleted', async () => {
+test('count decreases when blog is deleted', async () => {
     const initialResponse = await api.get('/api/blogs')
     const initialLength = initialResponse.body.length
 
@@ -139,7 +139,7 @@ test.only('count decreases when blog is deleted', async () => {
     assert.strictEqual(updatedLength, initialLength - 1)
 })
 
-test.only('likes increase when blog is updated', async () => {
+test('likes increase when blog is updated', async () => {
     const initialResponse = await api.get('/api/blogs')
     const blogId = initialResponse.body[5].id
 
@@ -160,6 +160,45 @@ test.only('likes increase when blog is updated', async () => {
     assert.strictEqual(updatedLikes, 2828)
 })
 
+test.only('user does not get created if username too short and an error message is shown', async () => {
+  const initialResponse = await api.get('/api/users')
+  const initialLength = initialResponse.body.length
+
+  const newUser = {
+    username: 'kp',
+    name: 'Koko',
+    password: '1234567'
+  }
+
+  await api.post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+  const response = await api.get('/api/users')
+  const updatedLength = response.body.length
+
+  assert.strictEqual(updatedLength, initialLength)
+})
+
+test.only('user does not get created if password too short and an error message is shown', async () => {
+  const initialResponse = await api.get('/api/users')
+  const initialLength = initialResponse.body.length
+
+  const newUser = {
+    username: 'konstantinpimpirev',
+    name: 'Koko',
+    password: 'kp'
+  }
+
+  await api.post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+  const response = await api.get('/api/users')
+  const updatedLength = response.body.length
+
+  assert.strictEqual(updatedLength, initialLength)
+})
 
 after(async () => {
   await mongoose.connection.close()

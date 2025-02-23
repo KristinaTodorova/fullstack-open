@@ -1,14 +1,27 @@
 GET http://localhost:3001/api/blogs/
 
 ###
+
+POST http://localhost:3001/api/login
+content-type: application/json
+
+{
+    "username": "kristinatodorova",
+    "password": "musaka"
+}
+
+###
 POST http://localhost:3001/api/blogs/ HTTP/1.1
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImtyaXN0aW5hdG9kb3JvdmEiLCJpZCI6IjY3YmIxZTliY2M4ZmUwYWQ2NzQ1YzgzMyIsImlhdCI6MTc0MDMxOTM0OH0.APx4utRpNknfsHy8pbjdQ98Yr9gSL2FoP6i9xpCEXRY
+
 
 {
     "title": "How to be a fullstack rockstar",
     "author": "Kristina Todorova",
     "url": "google.com",
-    "likes": "10"
+    "likes": "10",
+    "userId": "67bb1e77cc8fe0ad6745c831"
 }
 
 ###
