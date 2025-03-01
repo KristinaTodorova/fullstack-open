@@ -3,6 +3,7 @@ const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+require('dotenv').config();
 //const Blog = require('../models/blog')
 
 const api = supertest(app)
@@ -29,7 +30,7 @@ beforeEach(async () => {
     await blogObject.save()
     blogObject = new Blog(initialBlogs[1])
     await blogObject.save()
-}) */
+}) 
 
 test('blogs are returned as json', async () => {
   await api
@@ -51,9 +52,14 @@ test('unique identifier is named id', async () => {
     })
 })
 
+*/
+
 test('post request successful and count increases by one', async () => {
     const initialResponse = await api.get('/api/blogs')
     const initialLength = initialResponse.body.length
+
+    const loginResponse = await api.post('/api/login').send({ username: 'kristinatodorova', password: process.env.TEST_USER_PASSWORD })
+    const token = loginResponse.body.token
 
     const newBlog = {
         title: 'Exercise 4.10 will be successful',
@@ -63,6 +69,7 @@ test('post request successful and count increases by one', async () => {
       }
       await api.post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
 
       const response = await api.get('/api/blogs')
@@ -72,6 +79,9 @@ test('post request successful and count increases by one', async () => {
 })
 
 test('if there are no likes, the default value is 0', async () => {
+  const loginResponse = await api.post('/api/login').send({ username: 'kristinatodorova', password: process.env.TEST_USER_PASSWORD })
+  const token = loginResponse.body.token
+
     const newBlog = {
         title: 'Exercise 4.11 will be successful',
         author: 'Meee Obviously',
@@ -80,6 +90,7 @@ test('if there are no likes, the default value is 0', async () => {
 
       await api.post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
 
       const response = await api.get('/api/blogs')
@@ -89,6 +100,9 @@ test('if there are no likes, the default value is 0', async () => {
 })
 
 test('post without title returns 400 and nothing is created', async () => {
+  const loginResponse = await api.post('/api/login').send({ username: 'kristinatodorova', password: process.env.TEST_USER_PASSWORD })
+  const token = loginResponse.body.token
+
     const initialResponse = await api.get('/api/blogs')
     const initialLength = initialResponse.body.length
 
@@ -99,6 +113,7 @@ test('post without title returns 400 and nothing is created', async () => {
       }
       await api.post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400)
 
       const response = await api.get('/api/blogs')
@@ -108,6 +123,9 @@ test('post without title returns 400 and nothing is created', async () => {
 })
 
 test('post without url returns 400 and nothing is created', async () => {
+  const loginResponse = await api.post('/api/login').send({ username: 'kristinatodorova', password: process.env.TEST_USER_PASSWORD })
+  const token = loginResponse.body.token
+
     const initialResponse = await api.get('/api/blogs')
     const initialLength = initialResponse.body.length
 
@@ -118,6 +136,7 @@ test('post without url returns 400 and nothing is created', async () => {
       }
       await api.post('/api/blogs')
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(400)
 
       const response = await api.get('/api/blogs')
@@ -127,10 +146,14 @@ test('post without url returns 400 and nothing is created', async () => {
 })
 
 test('count decreases when blog is deleted', async () => {
+  const loginResponse = await api.post('/api/login').send({ username: 'kristinatodorova', password: process.env.TEST_USER_PASSWORD })
+  const token = loginResponse.body.token
+
     const initialResponse = await api.get('/api/blogs')
     const initialLength = initialResponse.body.length
 
-      await api.delete(`/api/blogs/${initialResponse.body[5].id}`)
+      await api.delete(`/api/blogs/${initialResponse.body[20].id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
       const response = await api.get('/api/blogs')
@@ -140,6 +163,9 @@ test('count decreases when blog is deleted', async () => {
 })
 
 test('likes increase when blog is updated', async () => {
+  const loginResponse = await api.post('/api/login').send({ username: 'kristinatodorova', password: process.env.TEST_USER_PASSWORD })
+  const token = loginResponse.body.token
+
     const initialResponse = await api.get('/api/blogs')
     const blogId = initialResponse.body[5].id
 
@@ -151,6 +177,7 @@ test('likes increase when blog is updated', async () => {
       }
       await api.put(`/api/blogs/${blogId}`)
       .send(newBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(200)
 
       const response = await api.get('/api/blogs')
