@@ -5,6 +5,6 @@ This repository will be used for submitting solutions to the tasks of Fullstack 
 **Part 1:** Done ✅\
 **Part 2:** Done ✅\
 **Part 3:** Done ✅\
-**Part 4:** In progress\
-**Part 5:** To-Do\
+**Part 4:** Done ✅\
+**Part 5:** In Progress\
 **Part 6:** To-Do
