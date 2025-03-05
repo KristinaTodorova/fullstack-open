@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
+import ErrorMessage from './components/ErrorMessage'
+import './index.css' 
 
 
 const App = () => {
@@ -13,6 +16,9 @@ const App = () => {
   const [title, setTitle] = useState('') 
   const [author, setAuthor] = useState('') 
   const [url, setUrl] = useState('') 
+
+  const [notification, setNewNotification] = useState('')
+  const [error, setNewError] = useState('')
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -31,10 +37,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      setNewError(`Wrong username or password`)
+        setTimeout(() => {
+              setNewError('')
+            }, 5000)
     }
   }
 
@@ -47,6 +53,10 @@ const App = () => {
       })
 
       setBlogs(prevBlogs => [...prevBlogs, newBlog])
+      setNewNotification(`A new blog "${title}" by ${author} has been added successfully!`)
+        setTimeout(() => {
+              setNewNotification('')
+            }, 5000)
 
       setTitle('')
       setAuthor('')
@@ -69,6 +79,7 @@ const App = () => {
   const loginForm = () => (
     <div>
     <h2>Login</h2>
+    { error && <ErrorMessage message={error} />} 
     <form onSubmit={handleLogin}>
         <div>
           username
@@ -90,11 +101,13 @@ const App = () => {
         </div>
         <button type="submit">login</button>
       </form>
+
       </div>
   )
 
   const blogList = () => (
     <div>
+      { notification && <Notification message={notification} />}    
       <p>{user.name} is logged in.</p> 
       
       <form onSubmit={handleLogout}>
