@@ -1,12 +1,32 @@
+import { useState } from 'react';
+
 const CreateBlog = ({
-    createBlog,
-    title,
-    handleTitle,
-    author,
-    handleAuthor,
-    url,
-    handleUrl
-}) => (
+    addBlog,
+    toggleVisibility
+}) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  const createBlog = async (event) => {
+    event.preventDefault()
+    
+    try {
+        const newBlog = {title, author, url}
+        await addBlog(newBlog)
+
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+
+      toggleVisibility() 
+
+    } catch (exception) {
+        setErrorMessage("Failed")
+    }
+  }
+
+return (
     <div>
 
       <h2>Create new blog</h2>
@@ -17,7 +37,7 @@ const CreateBlog = ({
             type="text"
             value={title}
             name="Title"
-            onChange={handleTitle}
+            onChange={({ target }) => setTitle(target.value)}
           />
         </div>
 
@@ -27,7 +47,7 @@ const CreateBlog = ({
             type="text"
             value={author}
             name="Author"
-            onChange={handleAuthor}
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
 
@@ -37,7 +57,7 @@ const CreateBlog = ({
             type="text"
             value={url}
             name="URL"
-            onChange={handleUrl}
+            onChange={({ target }) => setUrl(target.value)}
           />
         </div>
         
@@ -45,5 +65,5 @@ const CreateBlog = ({
       </form>
     </div>
   )
-
+}
 export default CreateBlog

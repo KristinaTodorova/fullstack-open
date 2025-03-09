@@ -15,10 +15,6 @@ const App = () => {
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
 
-  const [title, setTitle] = useState('') 
-  const [author, setAuthor] = useState('') 
-  const [url, setUrl] = useState('') 
-
   const [notification, setNewNotification] = useState('')
   const [error, setNewError] = useState('')
   const blogRef = useRef()
@@ -47,38 +43,26 @@ const App = () => {
     }
   }
 
-  const createBlog = async (event) => {
-    event.preventDefault()
-    blogRef.current.toggleVisibility()
-    
-    try {
-      const newBlog = await blogService.create({
-        title, author, url
-      })
-
-      setBlogs(prevBlogs => [...prevBlogs, newBlog])
-      setNewNotification(`A new blog "${title}" by ${author} has been added successfully!`)
-        setTimeout(() => {
-              setNewNotification('')
-            }, 5000)
-
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      
-
-    } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  }
-
   const handleLogout = async (event) => {
     window.localStorage.removeItem('loggedUser')
     setUser(null)
   }
+
+  const createBlog = async (blogObject) => {
+    try {
+      const newBlog = await blogService.create(blogObject);
+
+      setBlogs(prevBlogs => [...prevBlogs, newBlog]); 
+
+      setNewNotification(`A new blog "${newBlog.title}" by ${newBlog.author} has been added!`);
+      setTimeout(() => setNewNotification(''), 5000);
+    } catch (exception) {
+      setNewError(`Adding a new blog failed.`)
+        setTimeout(() => {
+              setNewError('')
+            }, 5000)
+    }
+  };
 
   const loginForm = () => (
     <div>
@@ -111,6 +95,7 @@ const App = () => {
 
   const blogList = () => (
     <div>
+      { error && <ErrorMessage message={error} />} 
       { notification && <Notification message={notification} />}    
       <p>{user.name} is logged in.</p> 
       
@@ -121,13 +106,8 @@ const App = () => {
       <Toggable buttonLabel="create new blog" ref={blogRef}>
 
         <CreateBlog 
-        title={title}
-        author={author}
-        url={url}
-        handleTitle={({ target }) => setTitle(target.value)}
-        handleAuthor={({ target }) => setAuthor(target.value)}
-        handleUrl={({ target }) => setUrl(target.value)}
-        createBlog={createBlog}
+        addBlog={createBlog}
+        toggleVisibility={() => blogRef.current.toggleVisibility()}
         />
 
       </Toggable>
