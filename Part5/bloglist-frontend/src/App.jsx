@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import ErrorMessage from './components/ErrorMessage'
 import './index.css' 
+import Toggable from './components/Toggable'
+import CreateBlog from './components/CreateBlog'
 
 
 const App = () => {
@@ -19,6 +21,7 @@ const App = () => {
 
   const [notification, setNewNotification] = useState('')
   const [error, setNewError] = useState('')
+  const blogRef = useRef()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -46,6 +49,7 @@ const App = () => {
 
   const createBlog = async (event) => {
     event.preventDefault()
+    blogRef.current.toggleVisibility()
     
     try {
       const newBlog = await blogService.create({
@@ -114,40 +118,19 @@ const App = () => {
       <button type="submit">logout</button>
       </form>
 
-      <h2>Create new blog</h2>
-    <form onSubmit={createBlog}>
-        <div>
-          title
-            <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
+      <Toggable buttonLabel="create new blog" ref={blogRef}>
 
-        <div>
-          author
-            <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
+        <CreateBlog 
+        title={title}
+        author={author}
+        url={url}
+        handleTitle={({ target }) => setTitle(target.value)}
+        handleAuthor={({ target }) => setAuthor(target.value)}
+        handleUrl={({ target }) => setUrl(target.value)}
+        createBlog={createBlog}
+        />
 
-        <div>
-          url
-            <input
-            type="text"
-            value={url}
-            name="URL"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        
-        <button type="submit">Create</button>
-      </form>
+      </Toggable>
 
       <h2>Blogs</h2>
       {blogs.map(blog =>
