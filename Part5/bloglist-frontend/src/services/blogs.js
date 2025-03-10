@@ -18,7 +18,24 @@ const create = async newBlog => {
   }
 
   const response = await axios.post(baseUrl, newBlog, config)
-  return response.data;
+  return response.data
 }
 
-export default { getAll, create, setToken }
+const like = async (id, newBlog) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  console.log("blog ID:", id)
+  console.log("blog object:", newBlog)
+
+  if (!id || typeof id !== "string") {
+    console.error("Invalid ID being sent:", id)
+    throw new Error("Invalid blog ID")
+  }
+
+  const response = await axios.put(`${baseUrl}/${id}`, newBlog, config)
+  return response.data
+}
+
+export default { getAll, create, setToken, like }
