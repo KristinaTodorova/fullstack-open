@@ -94,7 +94,16 @@ const App = () => {
   )
 
   const updateBlog = (updatedBlog) => {
-    setBlogs(blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog));
+    setBlogs(blogs.map(blog => blog.id === updatedBlog.id ? updatedBlog : blog))
+  }
+
+  const updateBlogs = async () => {
+    try {
+      const updatedBlogs = await blogService.getAll()
+      setBlogs(updatedBlogs)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const blogList = () => (
@@ -120,7 +129,7 @@ const App = () => {
       {blogs
       .sort((a, b) => b.likes - a.likes)
       .map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} updateBlogs={updateBlogs} user={user}/>
       )}
     </div>
   )
@@ -138,6 +147,7 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
+      console.log(user)
     }
   }, [])
 

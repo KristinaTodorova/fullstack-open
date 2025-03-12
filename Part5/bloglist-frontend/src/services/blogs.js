@@ -26,16 +26,18 @@ const like = async (id, newBlog) => {
     headers: { Authorization: token },
   }
 
-  console.log("blog ID:", id)
-  console.log("blog object:", newBlog)
-
-  if (!id || typeof id !== "string") {
-    console.error("Invalid ID being sent:", id)
-    throw new Error("Invalid blog ID")
-  }
-
   const response = await axios.put(`${baseUrl}/${id}`, newBlog, config)
   return response.data
 }
 
-export default { getAll, create, setToken, like }
+const remove = async (id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
+  return response.data
+
+}
+
+export default { getAll, create, setToken, like, remove }
