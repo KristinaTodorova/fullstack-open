@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, updateBlog, updateBlogs, user}) => {
+const Blog = ({ blog, updateBlog, updateBlogs, user }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -11,60 +11,60 @@ const Blog = ({ blog, updateBlog, updateBlogs, user}) => {
     marginBottom: 5
   }
 
-const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false)
 
-const toggleVisibility = () => {
-  setVisible(!visible)
-}
+  const toggleVisibility = () => {
+    setVisible(!visible)
+  }
 
-const handleLike = async () => {
-  try{
-    const updatedBlog = {
-      ...blog
+  const handleLike = async () => {
+    try{
+      const updatedBlog = {
+        ...blog
+      }
+
+      const returnedBlog = await blogService.like(blog.id, updatedBlog)
+      updateBlog(returnedBlog)
     }
-
-    const returnedBlog = await blogService.like(blog.id, updatedBlog)
-    updateBlog(returnedBlog)
+    catch(exception) {
+      console.log(exception)
+    }
   }
-  catch(exception) {
-    console.log(exception)
-  }
-}
 
-const handleDelete = async () => {
+  const handleDelete = async () => {
 
-  if (window.confirm(`Remove blog ${blog.title} by ${blog.author} ?`)) {
-  try{
-    //console.log(user.username, blog.user.username)
-    await blogService.remove(blog.id)
-    updateBlogs()
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author} ?`)) {
+      try{
+        //console.log(user.username, blog.user.username)
+        await blogService.remove(blog.id)
+        updateBlogs()
+      }
+      catch (exception) {
+        console.log(exception)
+      }
+    }
   }
-  catch (exception) {
-    console.log(exception)
-  }
-}
-}
 
-return (
-  <div style={blogStyle}>
-    {blog.title} 
-    <br></br>
-    {blog.author}
-    <br></br>
-    {visible && (
+  return (
+    <div style={blogStyle}>
+      {blog.title}
+      <br></br>
+      {blog.author}
+      <br></br>
+      {visible && (
         <div>
           <p>{blog.url}</p>
           <p>Likes: {blog.likes} <button onClick={handleLike}>Like</button></p>
           <p>{blog.user?.name}</p>
-          {blog.user?.username == user.username && (
-          <button onClick={handleDelete}>remove</button>
+          {blog.user?.username === user.username && (
+            <button onClick={handleDelete}>remove</button>
           )
           }
         </div>
       )}
-    <button onClick={toggleVisibility}>{visible ? 'Hide' : 'View'}</button>
-  </div>  
-)
+      <button onClick={toggleVisibility}>{visible ? 'Hide' : 'View'}</button>
+    </div>
+  )
 }
 
 export default Blog

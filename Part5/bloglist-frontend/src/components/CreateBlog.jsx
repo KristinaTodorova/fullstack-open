@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
 const CreateBlog = ({
-    addBlog,
-    toggleVisibility
+  addBlog,
+  toggleVisibility
 }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -10,30 +10,30 @@ const CreateBlog = ({
 
   const createBlog = async (event) => {
     event.preventDefault()
-    
+
     try {
-        const newBlog = {title, author, url}
-        await addBlog(newBlog)
+      const newBlog = { title, author, url }
+      await addBlog(newBlog)
 
       setTitle('')
       setAuthor('')
       setUrl('')
 
-      toggleVisibility() 
+      toggleVisibility()
 
     } catch (exception) {
-        setErrorMessage("Failed")
+      console.error('failed')
     }
   }
 
-return (
+  return (
     <div>
 
       <h2>Create new blog</h2>
-    <form onSubmit={createBlog}>
+      <form onSubmit={createBlog}>
         <div>
           title
-            <input
+          <input
             type="text"
             value={title}
             name="Title"
@@ -43,7 +43,7 @@ return (
 
         <div>
           author
-            <input
+          <input
             type="text"
             value={author}
             name="Author"
@@ -53,14 +53,14 @@ return (
 
         <div>
           url
-            <input
+          <input
             type="text"
             value={url}
             name="URL"
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        
+
         <button type="submit">create</button>
       </form>
     </div>
