@@ -31,6 +31,7 @@ const Blog = ({ blog, updateBlog, updateBlogs, user }) => {
     }
   }
  */
+
   const handleLike = async () => {
     const updatedBlog = {
       ...blog,
