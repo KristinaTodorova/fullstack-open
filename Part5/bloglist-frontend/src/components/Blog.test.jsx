@@ -62,3 +62,28 @@ test('clicking the button shows blog details', async () => {
         '10'
       )
   })
+
+test('clicking the like button twice calls handler two times', async () => {
+    const user = {username: "kristinatodorova"}
+    const blog = {
+        title: 'Test with react-testing-library',
+        author: 'Kristina',
+        url: 'google.com',
+        likes: 10,
+        user: { username: 'kristinatodorova'}
+    }
+    
+    const mockHandler = vi.fn()
+  
+    render(<Blog blog={blog} updateBlog = {mockHandler} user={user}/>)
+  
+    const userAction = userEvent.setup()
+    const buttonForView = screen.getByText('View')
+    await userAction.click(buttonForView)
+
+const buttonForLike = screen.getByText('Like')
+  await userAction.click(buttonForLike)
+  await userAction.click(buttonForLike)
+  expect(mockHandler.mock.calls).toHaveLength(2)
+
+  })

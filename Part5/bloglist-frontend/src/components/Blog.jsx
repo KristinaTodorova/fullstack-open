@@ -17,7 +17,7 @@ const Blog = ({ blog, updateBlog, updateBlogs, user }) => {
     setVisible(!visible)
   }
 
-  const handleLike = async () => {
+/*   const handleLike = async () => {
     try{
       const updatedBlog = {
         ...blog
@@ -29,6 +29,14 @@ const Blog = ({ blog, updateBlog, updateBlogs, user }) => {
     catch(exception) {
       console.log(exception)
     }
+  }
+ */
+  const handleLike = async () => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1 
+    }
+    updateBlog(updatedBlog) 
   }
 
   const handleDelete = async () => {
