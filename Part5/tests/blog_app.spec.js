@@ -46,7 +46,7 @@ describe('When logged in', () => {
 
     test('a new blog can be created', async ({page}) => {
         await createBlog(page, 'New day new test', 'Krisata but anonymous', 'playwright.dev')
-        await expect(page.getByText('New day new test')).toBeVisible()
+        await expect(page.locator('.blog', { hasText: 'New day new test' })).toBeVisible()
 
     })
     test('a blog can be liked', async ({page}) => {
@@ -54,8 +54,17 @@ describe('When logged in', () => {
         const blogToBeLiked = await page.getByText('New day new test')
         await blogToBeLiked.getByRole('button', { name: 'View' }).click()
         await blogToBeLiked.getByRole('button', { name: 'Like' }).click()
-      await expect(blogToBeLiked.getByText('Likes: 1')).toBeVisible()
+        await expect(blogToBeLiked.getByText('Likes: 1')).toBeVisible()
 
+    })
+    test('a blog can be deleted by the creator', async ({page}) => {
+        await createBlog(page, 'Delete test', 'Krisata but anonymous', 'playwright.dev')
+        const blogToBeRemoved = page.locator('.blog', { hasText: 'Delete test' })
+        await blogToBeRemoved.getByRole('button', { name: 'View' }).click()
+
+        page.on('dialog', async dialog => {await dialog.accept()})
+        await blogToBeRemoved.getByRole('button', { name: 'remove' }).click()
+        await expect(page.locator('.blog', { hasText: 'Delete test' })).toHaveCount(0, { timeout: 5000 })
     })
 })
 })
