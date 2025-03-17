@@ -12,6 +12,14 @@ describe('Blog app', () => {
             password: 'testuser'
           }
         })
+
+        await request.post('http://localhost:3001/api/users', {
+              data: {
+                name: 'Another User',
+                username: 'anotheruser',
+                password: 'anotheruser'
+              }
+        })
     
         await page.goto('http://localhost:5173')
       })
@@ -49,6 +57,7 @@ describe('When logged in', () => {
         await expect(page.locator('.blog', { hasText: 'New day new test' })).toBeVisible()
 
     })
+
     test('a blog can be liked', async ({page}) => {
         await createBlog(page, 'New day new test', 'Krisata but anonymous', 'playwright.dev')
         const blogToBeLiked = await page.getByText('New day new test')
@@ -57,6 +66,7 @@ describe('When logged in', () => {
         await expect(blogToBeLiked.getByText('Likes: 1')).toBeVisible()
 
     })
+
     test('a blog can be deleted by the creator', async ({page}) => {
         await createBlog(page, 'Delete test', 'Krisata but anonymous', 'playwright.dev')
         const blogToBeRemoved = page.locator('.blog', { hasText: 'Delete test' })
@@ -66,6 +76,25 @@ describe('When logged in', () => {
         await blogToBeRemoved.getByRole('button', { name: 'remove' }).click()
         await expect(page.locator('.blog', { hasText: 'Delete test' })).toHaveCount(0, { timeout: 5000 })
     })
+
+    test('only the creator of a blog can delete it', async ({page}) => {
+        
+    await loginWith(page, 'testuser', 'testuser')
+    await createBlog(page, 'Test of delete button', 'First user blog', 'testuser.com')
+
+    const blog = page.locator('.blog', { hasText: 'First user blog' })
+    await blog.getByRole('button', { name: 'View' }).click()
+    await expect(blog.getByRole('button', { name: 'remove' })).toBeVisible()
+
+    await page.getByRole('button', { name: 'logout' }).click()
+
+    await loginWith(page, 'anotheruser', 'anotheruser')
+
+    const blogForAnotherUser = page.locator('.blog', { hasText: 'First user blog' })
+    await blogForAnotherUser.getByRole('button', { name: 'View' }).click()
+    await expect(blogForAnotherUser.getByRole('button', { name: 'remove' })).toHaveCount(0)
+    })
+
 })
 })
 
