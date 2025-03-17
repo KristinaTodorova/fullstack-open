@@ -94,7 +94,6 @@ describe('When logged in', () => {
     await blogForAnotherUser.getByRole('button', { name: 'View' }).click()
     await expect(blogForAnotherUser.getByRole('button', { name: 'remove' })).toHaveCount(0)
     })
-
 })
 })
 
