@@ -28,7 +28,7 @@ export const vote = (id) => {
 export const createAnecdote = (event) => {
   return {
     type: 'NEW_ANECDOTE',
-    payload: anecdote
+    payload: event
   }
 }
 
